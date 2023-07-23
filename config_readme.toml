@@ -1,0 +1,14 @@
+[app]
+app_intro = """
+This app allows you to visualise air quality data and variables for different countries and locations, in just a few clicks.
+All you have to do is select your desired country and variable to check.
+
+This app was created for the purposes of participation in the [Streamlit Connections Hackathon](https://discuss.streamlit.io/t/connections-hackathon/47574)
+
+"""
+[tooltips]
+country = "Select one of the possible countries to visualise your variable."
+variable = "Select one of the possible variables to visualise."
+[links]
+repo = "https://github.com/stavrostheocharis/air_quality_app"
+other_link = "https://github.com/stavrostheocharis/air_quality_app"
