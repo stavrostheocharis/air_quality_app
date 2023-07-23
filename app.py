@@ -10,7 +10,7 @@ conn = st.experimental_connection("openaq", type=OpenAQConnection)
 readme = load_config("config_readme.toml")
 
 # Info
-st.title("Air quality data in several countries and locations")
+st.title("Air quality data map")
 with st.expander("What is this app?", expanded=False):
     st.write(readme["app"]["app_intro"])
     st.write("")
@@ -18,13 +18,12 @@ st.write("")
 st.sidebar.image(load_image("logo.png"), use_column_width=True)
 display_links(readme["links"]["repo"], readme["links"]["other_link"])
 
-
-get_countries_response = conn.query_countries()["results"]
-st.session_state["get_countries_response"] = get_countries_response
-transformed_countries = {
-    country["name"]: country["code"] for country in get_countries_response
-}
-transformed_countries["Global"] = None
+with st.spinner("Loading the available countries..."):
+    get_countries_response = conn.query_countries()["results"]
+    transformed_countries = {
+        country["name"]: country["code"] for country in get_countries_response
+    }
+    transformed_countries["Global"] = None
 
 # Parameters
 st.sidebar.title("Selections")
