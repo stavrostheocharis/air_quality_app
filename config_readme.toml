@@ -12,4 +12,4 @@ variable = "Select one of the possible variables to visualise."
 radius = "Search radius from coordinates as center in meters. Maximum of 25,000 (25km) defaults to 1000 (1km) e.g. radius=10000" 
 [links]
 repo = "https://github.com/stavrostheocharis/air_quality_app"
-other_link = "https://github.com/stavrostheocharis/air_quality_app"
+other_link = "https://airqualityapp-aeroa.streamlit.app/"

@@ -3,6 +3,7 @@
 ![AEROA](logo.png)
 
 "An air quality data app"
+[Deployed app](https://airqualityapp-aeroa.streamlit.app/)
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![License](https://img.shields.io/badge/License-MIT-informational.svg)](https://github.com/stavrostheocharis/air_quality_app/blob/main/LICENSE)
@@ -32,7 +33,7 @@ pip install -r requirements.txt
 
 ## Community cloud
 
-The app is hosted in the community cloud and you can access it directly from here.
+The app is hosted in the community cloud and you can access it directly from [here](https://airqualityapp-aeroa.streamlit.app/).
 ## How to contribute?
 
 We welcome any suggestions, problem reports, and contributions!
