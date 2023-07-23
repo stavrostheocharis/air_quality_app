@@ -9,6 +9,7 @@ This app was created for the purposes of participation in the [Streamlit Connect
 [tooltips]
 country = "Select one of the possible countries to visualise your variable."
 variable = "Select one of the possible variables to visualise."
+radius = "Search radius from coordinates as center in meters. Maximum of 25,000 (25km) defaults to 1000 (1km) e.g. radius=10000" 
 [links]
 repo = "https://github.com/stavrostheocharis/air_quality_app"
 other_link = "https://github.com/stavrostheocharis/air_quality_app"

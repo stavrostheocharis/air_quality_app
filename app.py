@@ -90,7 +90,7 @@ def visualize_variable_on_map(data_dict, variable):
 
 
 # Info
-st.title("Air quality data map")
+st.title("Air quality data")
 with st.expander("What is this app?", expanded=False):
     st.write(readme["app"]["app_intro"])
     st.write("")
@@ -141,10 +141,20 @@ selected_viariable = st.sidebar.selectbox(
     help=readme["tooltips"]["variable"],
 )
 
+radius = st.sidebar.slider(
+    "Select a radius",
+    min_value=100,
+    max_value=25000,
+    step=100,
+    value=1000,
+    help=readme["tooltips"]["radius"],
+)
+
 total_locations = transformed_countries[selected_country]["locations"]
 last_time = transformed_countries[selected_country]["lastUpdated"]
 information = f"The selected country is {selected_country}. The total found locations are {total_locations} with last updates at {last_time}."
 
 code = transformed_countries[selected_country]["code"]
-get_locations_response = conn.query(code)
-visualize_variable_on_map(get_locations_response, selected_viariable)
+locations_response = conn.query(code, radius)
+st.title("Map")
+visualize_variable_on_map(locations_response, selected_viariable)
