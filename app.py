@@ -9,63 +9,6 @@ st.set_page_config(page_title="OpenAQ Connection", layout="wide")
 conn = st.experimental_connection("openaq", type=OpenAQConnection)
 readme = load_config("config_readme.toml")
 
-# Info
-st.title("Air quality data map")
-with st.expander("What is this app?", expanded=False):
-    st.write(readme["app"]["app_intro"])
-    st.write("")
-st.write("")
-st.sidebar.image(load_image("logo.png"), use_column_width=True)
-display_links(readme["links"]["repo"], readme["links"]["other_link"])
-
-with st.spinner("Loading the available countries..."):
-    get_countries_response = conn.query_countries()["results"]
-    transformed_countries = {
-        country["name"]: country["code"] for country in get_countries_response
-    }
-    transformed_countries["Global"] = None
-
-# Parameters
-st.sidebar.title("Selections")
-selected_country = st.sidebar.selectbox(
-    "Select the desired country",
-    transformed_countries,
-    placeholder="Country",
-    index=len(transformed_countries) - 1,
-    help=readme["tooltips"]["country"],
-)
-
-
-variables = [
-    "um025",
-    "humidity",
-    "pressure",
-    "um050",
-    "temperature",
-    "um003",
-    "um005",
-    "pm1",
-    "pm10",
-    "um100",
-    "pm25",
-    "um010",
-    "voc",
-    "pm4",
-    "no",
-    "no2",
-    "o3",
-    "so2",
-    "co",
-]
-
-selected_viariable = st.sidebar.selectbox(
-    "Select the desired variable",
-    variables,
-    placeholder="Variable",
-    index=1,
-    help=readme["tooltips"]["variable"],
-)
-
 
 def visualize_variable_on_map(data_dict, variable):
     is_day = is_daytime()
@@ -77,11 +20,6 @@ def visualize_variable_on_map(data_dict, variable):
     values = []
     display_names = []
     last_updated = []
-
-    custom_markers = {
-        "humidity": "&#x1F4A7;",  # Humidity - Raindrop Emoji
-        "others": "&#x25B2;",
-    }
 
     # Loop through the results and extract relevant data for each location
     for result in data_dict.get("results", []):
@@ -102,7 +40,9 @@ def visualize_variable_on_map(data_dict, variable):
 
     if not latitudes or not longitudes or not values:
         print(f"{variable} data not found.")
-        return
+        return create_custom_markdown_card(
+            f"{variable} data not found for the selected country."
+        )
 
     # Create the visualization
     fig = go.Figure()
@@ -145,11 +85,67 @@ def visualize_variable_on_map(data_dict, variable):
         ),
         margin=dict(l=0, r=0, t=0, b=0),
     )
+    create_custom_markdown_card(information)
     st.plotly_chart(fig, use_container_width=True)
 
 
-# option = st.sidebar.checkbox("Create visualisation")
-# if option:
-code = transformed_countries[selected_country]
+# Info
+st.title("Air quality data map")
+with st.expander("What is this app?", expanded=False):
+    st.write(readme["app"]["app_intro"])
+    st.write("")
+st.write("")
+st.sidebar.image(load_image("logo.png"), use_column_width=True)
+display_links(readme["links"]["repo"], readme["links"]["other_link"])
+
+with st.spinner("Loading the available countries..."):
+    # Countries exist in first 2 pages
+    countries = []
+    for page in [1, 2]:
+        countries_request = conn.query_countries(page=page)["results"]
+        countries = countries + countries_request
+
+    transformed_countries = {
+        country["name"]: {
+            "code": country["code"],
+            "parameters": country["parameters"],
+            "locations": country["locations"],
+            "lastUpdated": country["lastUpdated"],
+        }
+        for country in countries
+    }
+
+    # Add a global for default when the app is initialised
+    transformed_countries["Global"] = {
+        "code": None,
+        "parameters": general_parameters,
+        "locations": None,
+        "lastUpdated": None,
+    }
+
+# Parameters
+st.sidebar.title("Selections")
+selected_country = st.sidebar.selectbox(
+    "Select the desired country",
+    transformed_countries,
+    placeholder="Country",
+    index=len(transformed_countries) - 1,  # Gets the last one "Global"
+    help=readme["tooltips"]["country"],
+)
+
+print(transformed_countries[selected_country])
+selected_viariable = st.sidebar.selectbox(
+    "Select the desired variable",
+    transformed_countries[selected_country]["parameters"],
+    placeholder="Variable",
+    index=1,
+    help=readme["tooltips"]["variable"],
+)
+
+total_locations = transformed_countries[selected_country]["locations"]
+last_time = transformed_countries[selected_country]["lastUpdated"]
+information = f"The selected country is {selected_country}. The total found locations are {total_locations} with last updates at {last_time}."
+
+code = transformed_countries[selected_country]["code"]
 get_locations_response = conn.query(code)
 visualize_variable_on_map(get_locations_response, selected_viariable)

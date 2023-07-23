@@ -20,12 +20,12 @@ class OpenAQConnection(ExperimentalBaseConnection[requests.Session]):
         self, limit=100, page=1, sort="asc", order_by="name", ttl: int = 3600
     ):
         @st.cache_data(ttl=ttl)
-        def _query_countries(_limit, _page, _sort, _order_by):
+        def _query_countries(limit, page, sort, order_by):
             params = {
-                "limit": _limit,
-                "page": _page,
-                "sort": _sort,
-                "order_by": _order_by,
+                "limit": limit,
+                "page": page,
+                "sort": sort,
+                "order_by": order_by,
             }
             with self._resource as s:
                 response = s.get("https://api.openaq.org/v2/countries", params=params)
@@ -45,21 +45,21 @@ class OpenAQConnection(ExperimentalBaseConnection[requests.Session]):
         dumpRaw="false",
         ttl: int = 3600,
     ):
-        # @st.cache_data(ttl=ttl)
+        @st.cache_data(ttl=ttl)
         def _get_locations_measurements(
-            _country_id, _limit, _page, _offset, _sort, _radius, _order_by, _dumpRaw
+            country_id, limit, page, offset, sort, radius, order_by, dumpRaw
         ):
             params = {
-                "limit": _limit,
-                "page": _page,
-                "offset": _offset,
-                "sort": _sort,
-                "radius": _radius,
-                "order_by": _order_by,
-                "dumpRaw": _dumpRaw,
+                "limit": limit,
+                "page": page,
+                "offset": offset,
+                "sort": sort,
+                "radius": radius,
+                "order_by": order_by,
+                "dumpRaw": dumpRaw,
             }
-            if _country_id is not None:
-                params["country_id"] = _country_id
+            if country_id is not None:
+                params["country_id"] = country_id
             with self._resource as s:
                 response = s.get("https://api.openaq.org/v2/locations", params=params)
             return response.json()
