@@ -17,10 +17,6 @@ def load_image(image_path: str):
     return Image.open(image_path)
 
 
-from typing import Any, Dict, List
-import streamlit as st
-
-
 def display_links(repo_link, other_link) -> None:
     """Displays a repository and other link"""
     col1, col2 = st.sidebar.columns(2)
