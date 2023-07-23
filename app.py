@@ -133,7 +133,6 @@ selected_country = st.sidebar.selectbox(
     help=readme["tooltips"]["country"],
 )
 
-print(transformed_countries[selected_country])
 selected_viariable = st.sidebar.selectbox(
     "Select the desired variable",
     transformed_countries[selected_country]["parameters"],
