@@ -14,6 +14,8 @@ This project is a Streamlit application for quick visualisations of air quality 
 
 This project was initialised based on the [Streamlit's Hacathon](https://discuss.streamlit.io/t/connections-hackathon/47574) in order to extend and use the new built in [ExperimentalBaseConnection](https://docs.streamlit.io/library/api-reference/connections/st.connections.experimentalbaseconnection).
 
+<div align="center">
+
 ![interface](interface.gif)
 
 </div>
