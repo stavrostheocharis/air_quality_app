@@ -2,7 +2,7 @@ import streamlit as st
 import plotly.graph_objects as go
 from connection import OpenAQConnection
 from utils import *
-
+import time
 
 st.set_page_config(page_title="OpenAQ Connection", layout="wide")
 
@@ -102,8 +102,11 @@ with st.spinner("Loading the available countries..."):
     # Countries exist in first 2 pages
     countries = []
     for page in [1, 2]:
-        countries_request = conn.query_countries(page=page)["results"]
-        countries = countries + countries_request
+        try:
+            countries_request = conn.query_countries(page=page)["results"]
+            countries = countries + countries_request
+        except Exception:
+            countries_error = True
 
     transformed_countries = {
         country["name"]: {
